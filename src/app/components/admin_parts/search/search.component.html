@@ -1,0 +1,39 @@
+
+<div class="row" *ngIf="add_mains_search">
+  <div class="col-12">
+    <label for="typeahead-main">Search Main Topics</label>
+    <div class="input-group mb-3">
+      <input id="typeahead-main" type="text" class="form-control" [(ngModel)]="mains" [ngbTypeahead]="search_mains" (blur)="savetomainSearch()" (ngModelChange)="filter_mains($event)" />
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon3" (click)="reset_mains()">Reset</button>
+        <div ngbDropdown >
+          <button class="btn btn-outline-primary " id="button-addon6" ngbDropdownToggle (blur)="onBlur($event.target)"  >Last</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let search of last_main_searches">
+              <span *ngFor="let search of last_main_searches">
+                <button class="dropdown-item" (click)="filter_mains(search);">{{search}}</button>
+              </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row" *ngIf="add_subs_search">
+  <div class="col-12">
+    <label for="typeahead-sub">Search Only Sub Topics</label>
+    <div class="input-group mb-3">
+      <input id="typeahead-sub" type="text" class="form-control" [(ngModel)]="subs" [ngbTypeahead]="search_subs" (blur)="savetosubSearch()" (ngModelChange)="filter_subs($event)"  aria-describedby="button-addon2"/>
+      <div class="input-group-append">
+        <button class="btn btn-outline-secondary" type="button"  (click)="reset_subs()">Reset</button>
+        <div ngbDropdown >
+          <button class="btn btn-outline-primary "  ngbDropdownToggle (blur)="onBlur($event.target)"  >Last</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1"  *ngFor="let search of last_sub_searches">
+            <span *ngFor="let search of last_sub_searches">
+                <button class="dropdown-item" (click)="filter_subs(search);">{{search}}</button>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

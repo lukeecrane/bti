@@ -1,0 +1,12 @@
+.background {
+  background-color: #f6f5f3;
+  background-image:
+    linear-gradient(
+      to top right,
+      #f6f5f3, #E0E0E0
+    );
+
+}
+.modal-dialog {
+  max-width: 80% !important;
+}

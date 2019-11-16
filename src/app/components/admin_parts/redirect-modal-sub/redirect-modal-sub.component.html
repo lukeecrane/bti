@@ -1,0 +1,80 @@
+<ng-template #new_redirect let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-new-redirect">New Redirect</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <label>Redirect Topic</label>
+        <p>
+          <ngb-alert [dismissible]="true" *ngIf="errorMessage!=''">
+            <strong>Error!</strong> {{errorMessage}}
+          </ngb-alert>
+        </p>
+        <div class="input-group">
+
+          <select class="form-control" id="newRedirect_title" [(ngModel)]="selected_redirect_topic.title" name="title">
+
+            <option *ngFor="let title of filtered_possible_titles" [value]="title">{{titleCase(title)}}</option>
+          </select>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-success" (click)="save_redirect(index,selected_redirect_topic)">Create</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancel</button>
+  </div>
+</ng-template>
+
+
+
+<ng-template #delete_redirect let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-delete-title">Delete Redirect</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>
+      <ngb-alert [dismissible]="true" *ngIf="errorMessage!=''">
+        <strong>Error!</strong> {{errorMessage}}
+      </ngb-alert>
+    </p>
+    <h5>Do you wish to delete this redirect: {{selected_redirect_topic.title}}?  This is a permanent.</h5>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="delete_this(index,selected_redirect_topic)">Yes</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('No click')">No</button>
+  </div>
+</ng-template>
+
+
+
+
+
+<div class="row justify-content-between">
+
+  <div class="col-3">
+    <div ngbDropdown class="d-inline-block" *ngIf="redirect_topics.length>0">
+      <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle  >Redirect</button>
+
+
+      <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let redirect_topic of redirect_topics">
+                <span *ngFor="let redirect_topic of redirect_topics">
+                  <button class="dropdown-item" (click)="open_delete(delete_redirect,redirect_topic)" placement="top" ngbTooltip="Edit Redirects"><i-delete class="text-danger" ></i-delete> {{redirect_topic.title}}</button>
+                </span>
+      </div>
+    </div>
+    <div class="d-inline-block" *ngIf="redirect_topics.length<=0">
+      <button class="btn btn-outline-primary disabled"  >Redirect</button>
+    </div>
+  </div>
+  <div class="col-3">
+    <button class="btn btn-outline-success float-right" type="button" (click)="open_new(new_redirect,index)" placement="top" ngbTooltip="Create a new Redirect."><i-plus-circle></i-plus-circle></button>
+  </div>
+</div>

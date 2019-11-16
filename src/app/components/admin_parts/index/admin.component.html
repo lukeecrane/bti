@@ -1,0 +1,55 @@
+
+
+
+<div class="jumbotron">
+  <div class="row ">
+    <div class="col"><h1>List of Topics</h1></div>
+    <div class="col-2" style="margin-top:10px;"><div class="float-right"><app-admin-topic-modal  [display_only_new]="true" (result)="indexChanged($event,acc)" ></app-admin-topic-modal></div></div>
+  </div>
+
+ <app-search [topics]="indices" (main_result)="main_results_update($event)" [add_subs_search]="false" ></app-search>
+
+  <br/>
+  <ngb-accordion #acc="ngbAccordion"  class="accordion" >
+    <ngb-panel id="toggle-{{i}}" title="{{index1.main_heading}}" *ngFor="let index1 of subset_of_display_indices ; index as i"> <!--*ngIf="!index1.hidden"-->
+      <ng-template ngbPanelContent  >
+        <div>
+          <ngb-tabset #t="ngbTabset" >
+            <ngb-tab id="main_topic">
+              <ng-template ngbTabTitle>Main Topic</ng-template>
+              <ng-template ngbTabContent>
+                <div class="row" style="margin-bottom:5px;margin-left:10px;margin-right:10px;">
+                  <div class="float-left"><app-admin-topic-modal [index]="index1" (result)="indexChanged($event,acc)" ></app-admin-topic-modal></div>
+                </div>
+
+                <app-index-card [index]="index1" [display_indices]="display_indices" (result)="indexChanged($event,acc)"></app-index-card>
+              </ng-template>
+            </ngb-tab>
+
+            <ngb-tab id="sub_topic">
+              <ng-template ngbTabTitle>
+                Sub Topics
+                </ng-template>
+              <ng-template ngbTabContent>
+                <app-admin-subs [index]="index1" [indicies]="indices" [current_sub]="index1.displayed_sub"></app-admin-subs>
+              </ng-template>
+            </ngb-tab>
+          </ngb-tabset>
+
+
+
+        </div>
+      </ng-template>
+    </ngb-panel>
+  </ngb-accordion>
+  <br/>
+  <div class="row">
+    <div class="col-11 justify-content-center" style="padding-top:15px;">
+
+      <ngb-pagination [directionLinks]="false" [maxSize]="5" [collectionSize]="display_indices.length" [rotate]="true"  [pageSize]="pageSize"   [(page)]="page"   (pageChange)="newPage($event)"></ngb-pagination>
+
+    </div>
+  </div>
+
+</div>
+<p><a [routerLink]="['/login']" class="btn">Logout</a></p>

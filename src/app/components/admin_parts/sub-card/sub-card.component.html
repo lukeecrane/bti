@@ -1,0 +1,35 @@
+
+
+
+<div class="card" *ngIf="sub!==undefined">
+  <div class="card-header"><h5 class="card-title">{{sub.sub_heading}}</h5></div>
+  <div class="card-body">
+    <app-redirect-modal-sub [index]="index" [indices]="indicies" [sub]="sub" [subIndex]="subIndex"></app-redirect-modal-sub>
+    <br/>
+    <div style="padding-top:10px;padding-bottom:10px;">
+      <app-scripture-modal-sub [index]="index" [display_only_new]="true" [sub]="sub" [subIndex]="subIndex"></app-scripture-modal-sub>
+    </div>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Versus</th>
+          <th>Description</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let scripture of sub.scriptures">
+          <td><strong style="color:rgb(0,0,0);">{{scripture.verse}}</strong></td>
+          <td>
+            <p class="text-info" [innerHTML]="scripture.KJV_text"></p>
+          </td>
+          <td>
+            <app-scripture-modal-sub [index]="index"  [sub]="sub" [scripture]="scripture" [subIndex]="subIndex"></app-scripture-modal-sub>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

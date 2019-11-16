@@ -1,0 +1,118 @@
+<ng-template #new_scripture let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-new-scripture">New Scripture</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <p>
+        <ngb-alert [dismissible]="true" *ngIf="errorMessage!=''">
+          <strong>Error!</strong> {{errorMessage}}
+        </ngb-alert>
+      </p>
+      <div class="form-group">
+        <label for="verse_new">Scripture Verse</label>
+        <div class="input-group">
+          <input id="verse_new" class="form-control" [(ngModel)]="selected_scripture.verse" #ctrl="ngModel" required name="verse" (blur)="getEntireVerse(selected_scripture.verse)" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label >Scripture Summary</label>
+        <div >
+          <angular-editor [config]="editorConfig" id="summary_new"  [(ngModel)]="selected_scripture.KJV_text" #ctrl="ngModel" required name="summary" rows="3" ></angular-editor>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="entire_edit">Scripture Complete</label>
+        <div class="input-group">
+          <textarea id="entire_new" class="form-control" [(ngModel)]="selected_scripture.entireKJV_text" #ctrl="ngModel" required name="entire scripture" rows="3"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-success" (click)="add_scripture(selected_scripture)">Create</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancel</button>
+  </div>
+</ng-template>
+
+<ng-template #edit_scripture let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-edit-scripture">Update Scripture</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <p>
+        <ngb-alert [dismissible]="true" *ngIf="errorMessage!=''">
+          <strong>Error!</strong> {{errorMessage}}
+        </ngb-alert>
+      </p>
+      <div class="form-group">
+        <label for="verse_edit">Scripture Verse</label>
+        <div class="input-group">
+          <input id="verse_edit" class="form-control" [(ngModel)]="selected_scripture.verse" #ctrl="ngModel" required name="verse" (blur)="getEntireVerse(selected_scripture.verse)" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Scripture Summary</label>
+        <div >
+          <angular-editor [config]="editorConfig" id="summary_edit"  [(ngModel)]="selected_scripture.KJV_text" #ctrl="ngModel" required name="summary" rows="3" ></angular-editor>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="entire_edit">Scripture Complete</label>
+        <div class="input-group">
+          <textarea id="entire_edit" class="form-control" [(ngModel)]="selected_scripture.entireKJV_text" #ctrl="ngModel" required name="entire scripture" rows="3"></textarea>
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-success" (click)="update_scripture(selected_scripture)">Update</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancel</button>
+    <button type="button" class="btn btn-outline-danger" (click)="delete_this(selected_scripture)">Delete</button>
+  </div>
+</ng-template>
+
+
+<ng-template #delete_scripture let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-delete-title">Delete Scripture</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <p>
+      <ngb-alert [dismissible]="true" *ngIf="errorMessage!=''">
+        <strong>Error!</strong> {{errorMessage}}
+      </ngb-alert>
+    </p>
+    <h5>Do you wish to delete this scripture: {{selected_scripture.verse}}?  This is a permanent.</h5>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="delete_this(selected_scripture)">Yes</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('No click')">No</button>
+  </div>
+</ng-template>
+
+
+
+
+
+
+
+<div *ngIf="!display_only_new" class="btn-group" role="group" aria-label="Basic example">
+  <button class="btn btn-outline-success" type="button"  (click)="open_new(new_scripture)" placement="top" ngbTooltip="Create a new Scripture."><i-plus-circle></i-plus-circle></button>
+  <button class="btn btn-outline-primary" type="button"  (click)="open_edit(edit_scripture,scripture)" placement="top" ngbTooltip="Edit this Scripture."><i-edit></i-edit></button>
+  <button class="btn btn-outline-danger" type="button"  (click)="open_delete(delete_scripture,scripture)" placement="top" ngbTooltip="Delete this Scripture."><i-delete></i-delete></button>
+</div>
+
+<div *ngIf="display_only_new" class="btn-group" role="group" aria-label="Basic example">
+  <button class="btn btn-outline-success" type="button"  (click)="open_new(new_scripture)" placement="top" ngbTooltip="Create a new Scripture."><i-plus-circle></i-plus-circle> New Scripture</button>
+</div>

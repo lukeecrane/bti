@@ -1,0 +1,375 @@
+
+<div class="container" >
+<div class="row">
+  <div class="col-11 justify-content-center">
+    <h1>List of Topics</h1>
+  </div>
+</div>
+    <div class="row" >
+      <div class="col-12">
+  <label for="typeahead-main">Main Topics</label>
+  <div class="input-group mb-3">
+    <input id="typeahead-main" type="text" class="form-control" [(ngModel)]="model" [ngbTypeahead]="search" (blur)="savetoSearch()" (ngModelChange)="filter($event,acc)"  aria-describedby="button-addon2"/>
+    <div class="input-group-append">
+      <button class="btn btn-outline-secondary" type="button" id="button-addon_main" (click)="reset(acc)">Reset</button>
+      <div ngbDropdown >
+        <button class="btn btn-outline-primary " id="button-addon_main2" ngbDropdownToggle (blur)="onBlur($event.target)"  >Last</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let search of searches" >
+            <span *ngFor="let search of searches">
+                <button class="dropdown-item" (click)="filter(search,acc);">{{search}}</button>
+            </span>
+        </div>
+      </div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+  <div class="row" >
+    <div class="col-12">
+      <label for="typeahead-sub">Search Only Sub Topics</label>
+      <div class="input-group mb-3">
+        <input id="typeahead-sub" type="text" class="form-control" [(ngModel)]="sub_model" [ngbTypeahead]="search_subs" (blur)="savetosubSearch()" (ngModelChange)="filter_sub($event,acc)"  aria-describedby="button-addon2"/>
+        <div class="input-group-append">
+          <button class="btn btn-outline-secondary" type="button" id="button-addon3" (click)="reset_sub(acc)">Reset</button>
+          <div ngbDropdown >
+            <button class="btn btn-outline-primary " id="button-addon6" ngbDropdownToggle (blur)="onBlur($event.target)"  >Last</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let search of sub_searches" >
+            <span *ngFor="let search of sub_searches">
+                <button class="dropdown-item" (click)="filter_sub(search,acc);">{{search}}</button>
+            </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-http-loader></ng-http-loader>
+    <div class="row" >
+      <div class="col-12">
+        <span [hidden]="display_only_subs">
+        <ngb-accordion #acc="ngbAccordion"  activeIds="ngb-panel-0">
+          <ngb-panel id="toggle-{{i}}"  *ngFor="let index1 of subset_of_display_indices ; index as i" >
+            <ng-template ngbPanelTitle>
+              <span><b>{{index1.main_heading}}</b></span>
+    </ng-template>
+            <ng-template ngbPanelContent  >
+
+
+
+              <ngb-tabset>
+                <ngb-tab >
+                  <ng-template ngbTabTitle class="dropdown"><button class="btn btn-outline-primary btn-no-border">{{index1.main_heading}}</button></ng-template>
+                  <ng-template ngbTabContent>
+                    <div class="table-responsive" *ngIf="index1.scriptures.length > 0">
+                      <table class="table">
+                        <thead>
+                        <tr>
+                          <th>Verses</th>
+                          <th>Description</th>
+                          <th>Examine</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let scripture of index1.scriptures">
+                          <td><strong style="color:rgb(0,0,0);">{{scripture.verse}}</strong>
+                          <td>
+                            <span *ngIf="scripture.KJV_text!='Redirect'"><p class="text-secondary" [innerHTML]="scripture.KJV_text"></p></span>
+                            <span *ngIf="scripture.KJV_text=='Redirect'">
+                        <p class="text-secondary text-muted" [innerHTML]="scripture.redirect_title"></p>
+                              <!-- <button class="btn btn-primary" (click)="jumpto(scripture.redirect_title,errormodal);">{{scripture.redirect_title}}</button> -->
+                </span>
+
+                          </td>
+                          <td><button class="btn btn-primary" type="button" style="background-position:center;" (click)="open(content,scripture.verse, scripture.entireKJV_text)"><i-book></i-book></button></td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab *ngIf="index1.subs != null">
+                  <ng-template ngbTabTitle>   <div ngbDropdown class="d-inline-block">
+                    <button class="btn btn-outline-primary btn-no-border" id="dropdownBasic4" ngbDropdownToggle  >Sub Topics</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let sub of index1.subs">
+            <span *ngFor="let sub of index1.subs">
+              <button class="dropdown-item" (click)="goto_sub(index1,sub,acc);"><span class="d-inline-block text-truncate" style="max-width: 150px;">{{sub.sub_heading}}</span></button>
+            </span>
+                    </div>
+                  </div></ng-template>
+                  <ng-template ngbTabContent>
+                    <div *ngIf="index1.displayed_sub!==undefined" >
+                      <div class="card" >
+                        <div class="card-header">
+                      <h3>{{index1.displayed_sub.sub_heading}}</h3>
+
+                          <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-primary " id="dropdownBasic7" ngbDropdownToggle  >Related Topics</button>
+                            <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let redirect_topic of index1.displayed_sub.redirect_topics">
+                                <span *ngFor="let redirect_topic of index1.displayed_sub.redirect_topics">
+                                  <button class="dropdown-item" (click)="goto_redirect_sub(index1,redirect_topic,acc);"><span class="d-inline-block text-truncate" style="max-width: 150px;">{{redirect_topic.title}}</span></button>
+                                </span>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div class="card-body">
+              <div class="table-responsive" *ngIf="index1.displayed_sub.scriptures!==undefined && index1.displayed_sub.scriptures.length > 0">
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th>Verses</th>
+                    <th>Description</th>
+                    <th>Examine</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let scripture of index1.displayed_sub.scriptures">
+                    <td><strong style="color:rgb(0,0,0);">{{scripture.verse}}</strong>
+                    <td>
+                      <span *ngIf="scripture.KJV_text!='Redirect'"><p class="text-secondary" [innerHTML]="scripture.KJV_text"></p></span>
+                      <span *ngIf="scripture.KJV_text=='Redirect'">
+                        <p class="text-secondary text-muted" [innerHTML]="scripture.redirect_title"></p>
+                </span>
+
+                    </td>
+                    <td><button class="btn btn-primary" type="button" style="background-position:center;" (click)="open(content,scripture.verse, scripture.entireKJV_text)"><i-book></i-book></button></td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="jumbotron" *ngIf="index1.displayed_sub==undefined" >
+                      <h3>Please Select the Sub Topic from above.</h3>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab *ngIf="index1.redirect_topics != null">
+                  <ng-template ngbTabTitle><div ngbDropdown class="d-inline-block">
+                    <button class="btn btn-outline-primary btn-no-border" id="dropdownBasic3" ngbDropdownToggle  >Related Topics</button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let redirect_topic of index1.redirect_topics">
+            <span *ngFor="let redirect_topic of index1.redirect_topics">
+              <button class="dropdown-item" (click)="goto_redirect(index1,redirect_topic,acc);"><span class="d-inline-block text-truncate" style="max-width: 150px;">{{redirect_topic.title}}</span></button>
+            </span>
+                    </div>
+                  </div></ng-template>
+                  <ng-template ngbTabContent>
+                    <div *ngIf="index1.displayed_redirect!==undefined" >
+                      <div class="card">
+                        <div class="card-header">
+                    <h3 class="card-title">{{index1.displayed_redirect.main_heading}}</h3>
+
+                          <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-primary " id="dropdownBasic6" ngbDropdownToggle  >Related Topics</button>
+                              <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let redirect_topic of index1.displayed_redirect.redirect_topics">
+                                <span *ngFor="let redirect_topic of index1.displayed_redirect.redirect_topics">
+                                  <button class="dropdown-item" (click)="goto_redirect(index1,redirect_topic,acc);"><span class="d-inline-block text-truncate" style="max-width: 150px;">{{redirect_topic.title}}</span></button>
+                                </span>
+                              </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="table-responsive" *ngIf="index1.displayed_redirect.scriptures!==undefined && index1.displayed_redirect.scriptures.length > 0">
+                            <table class="table">
+                              <thead>
+                              <tr>
+                                <th>Verses</th>
+                                <th>Description</th>
+                                <th>Examine</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr *ngFor="let scripture of index1.displayed_redirect.scriptures">
+                                <td><strong style="color:rgb(0,0,0);">{{scripture.verse}}</strong>
+                                <td>
+                                  <span *ngIf="scripture.KJV_text!='Redirect'"><p class="text-secondary" [innerHTML]="scripture.KJV_text"></p></span>
+                                  <span *ngIf="scripture.KJV_text=='Redirect'">
+                        <p class="text-secondary text-muted" [innerHTML]="scripture.redirect_title"></p>
+                                    <!-- <button class="btn btn-primary" (click)="jumpto(scripture.redirect_title,errormodal);">{{scripture.redirect_title}}</button> -->
+                </span>
+
+                                </td>
+                                <td><button class="btn btn-primary" type="button" style="background-position:center;" (click)="open(content,scripture.verse, scripture.entireKJV_text)"><i-book></i-book></button></td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="jumbotron" *ngIf="index1.displayed_redirect==undefined" >
+                      <h3>Please Select the Related Topics from above.</h3>
+                    </div>
+                  </ng-template>
+                </ngb-tab>
+              </ngb-tabset>
+            </ng-template>
+
+
+          </ngb-panel>
+        </ngb-accordion>
+          </span>
+        <hr/>
+        <span [hidden]="!display_only_subs">
+        <ngb-accordion #acc="ngbAccordion"  activeIds="ngb-panel-1">
+        <ngb-panel id="toggle_sub-{{i}}"  *ngFor="let sub1 of subset_of_display_subs ; index as i" >
+          <ng-template ngbPanelTitle>
+            <div class="row" style="text-align: left">
+              <span class="d-inline-block text-truncate" style="max-width: 250px;">
+                <b>{{sub1.sub_heading}}</b>
+              </span>
+            </div>
+            <div class="row" style="text-align: left">
+              <span class="d-inline-block text-truncatefont-bold" style="max-width: 250px;color:black"><small>({{sub1.main_heading}})</small></span>
+            </div>
+    </ng-template>
+          <ng-template ngbPanelContent  >
+            <span *ngIf="sub1.redirect_topics.length>0">
+              <div ngbDropdown class="d-inline-block">
+              <button class="btn btn-primary " id="dropdownBasic8" ngbDropdownToggle  >Related Topics</button>
+              <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let redirect_topic of sub1.redirect_topics">
+                                <span *ngFor="let redirect_topic of sub1.redirect_topics">
+                                  <button class="dropdown-item" (click)="goto_redirect_sub(sub1,redirect_topic,acc);"><span class="d-inline-block text-truncate" style="max-width: 150px;">{{redirect_topic.title}}</span></button>
+                                </span>
+              </div>
+            </div>
+
+            </span>
+            <span *ngIf="sub1.redirect_topics.length==0">
+              <button type="button" class="btn  btn-warning" disabled>No Related Topics</button>
+            </span>
+
+            <!-- Place Redirects here -->
+            <div *ngIf="sub1.displayed_redirect!==undefined" >
+              <div  style="padding-top:10px;padding-bottom:10px;">
+                      <div class="card"  >
+                        <div class="card-header">
+                    <h3 class="card-title">{{sub1.displayed_redirect.main_heading}}</h3>
+                            <i-x></i-x>
+                          <div ngbDropdown class="d-inline-block">
+                            <button class="btn btn-primary "  ngbDropdownToggle  >Related Topics</button>
+                              <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let redirect_topic of sub1.displayed_redirect.redirect_topics">
+                                <span *ngFor="let redirect_topic of sub1.displayed_redirect.redirect_topics">
+                                  <button class="dropdown-item" (click)="goto_redirect_sub(sub1,redirect_topic,acc);"><span class="d-inline-block text-truncate" style="max-width: 150px;">{{redirect_topic.title}}</span></button>
+                                </span>
+                              </div>
+                          </div>
+                        </div>
+                        <div class="card-body">
+                          <div class="table-responsive" *ngIf="sub1.displayed_redirect.scriptures!==undefined && sub1.displayed_redirect.scriptures.length > 0">
+                            <table class="table">
+                              <thead>
+                              <tr>
+                                <th>Verses</th>
+                                <th>Description</th>
+                                <th>Examine</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr *ngFor="let scripture of sub1.displayed_redirect.scriptures">
+                                <td><strong style="color:rgb(0,0,0);">{{scripture.verse}}</strong>
+                                <td>
+                                  <span *ngIf="scripture.KJV_text!='Redirect'"><p class="text-secondary" [innerHTML]="scripture.KJV_text"></p></span>
+                                  <span *ngIf="scripture.KJV_text=='Redirect'">
+                        <p class="text-secondary text-muted" [innerHTML]="scripture.redirect_title"></p>
+                </span>
+
+                                </td>
+                                <td><button class="btn btn-primary" type="button" style="background-position:center;" (click)="open(content,scripture.verse, scripture.entireKJV_text)"><i-book></i-book></button></td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+            </div>
+
+
+            <!-- display normal scriptures -->
+            <div class="table-responsive" *ngIf="sub1.scriptures.length > 0">
+              <br/>
+              <table class="table">
+                <thead>
+                <tr>
+                  <th>Verses</th>
+                  <th>Description</th>
+                  <th>Examine</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let scripture of sub1.scriptures">
+                  <td><strong style="color:rgb(0,0,0);">{{scripture.verse}}</strong>
+                  <td>
+                    <span *ngIf="scripture.KJV_text!='Redirect'"><p class="text-secondary" [innerHTML]="scripture.KJV_text"></p></span>
+                    <span *ngIf="scripture.KJV_text=='Redirect'">
+                        <p class="text-secondary text-muted" [innerHTML]="scripture.redirect_title"></p>
+                </span>
+
+                  </td>
+                  <td><button class="btn btn-primary" type="button" style="background-position:center;" (click)="open(content,scripture.verse, scripture.entireKJV_text)"><i-book></i-book></button></td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+
+
+          </ng-template>
+        </ngb-panel>
+
+        </ngb-accordion>
+        </span>
+      </div>
+    </div>
+
+
+  <div class="row">
+  <div class="col-11 justify-content-center" style="padding-top:15px;">
+    <span [hidden]="display_only_subs">
+      <ngb-pagination [directionLinks]="false" [maxSize]="5" [collectionSize]="display_indices.length" [rotate]="true"  [pageSize]="pageSize"   [(page)]="page"   (pageChange)="newPage($event)"></ngb-pagination>
+    </span>
+    <span [hidden]="!display_only_subs">
+      <ngb-pagination [directionLinks]="false" [maxSize]="5" [collectionSize]="display_subs.length" [rotate]="true"  [pageSize]="pageSize"   [(page)]="sub_page"   (pageChange)="newsubPage($event)"></ngb-pagination>
+    </span>
+  </div>
+</div>
+
+  <ng-template #content let-modal>
+    <div class="modal-header" >
+      <h4 class="modal-title" id="modal-basic-title">{{modalexpand_verse}}</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true"><i-x></i-x></span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group">
+          <p>{{modalexpand_entire}}</p>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+
+  <ng-template #errormodal let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-error">Error</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form>
+        <div class="form-group">
+          <p>{{error_message}}</p>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+
+</div>
+

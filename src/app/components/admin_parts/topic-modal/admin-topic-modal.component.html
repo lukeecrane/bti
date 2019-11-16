@@ -1,0 +1,72 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Create a new Topic</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <label for="title">Topic Name</label>
+        <p>
+          <ngb-alert [dismissible]="true" *ngIf="errorMessage!=''">
+            <strong>Error!</strong> {{errorMessage}}
+          </ngb-alert>
+        </p>
+        <div class="input-group">
+          <input id="title_edit" class="form-control" [(ngModel)]="current_Index.main_heading" #ctrl="ngModel" required name="title" />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="save_index(current_Index)">Save</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancel</button>
+  </div>
+</ng-template>
+
+<ng-template #edit let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-edit">Edit Topic</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <label for="title">Topic Name</label>
+        <div class="input-group">
+          <input id="title" class="form-control" [(ngModel)]="current_Index.main_heading" #ctrl="ngModel" required name="title" />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="update_index(current_Index)">Update</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancel</button>
+  </div>
+</ng-template>
+
+<ng-template #delete let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-delete-title">Delete Topic</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h5>Do you wish to delete this topic: {{current_Index.main_heading}}?  This is a permanent.</h5>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="delete_index(current_Index)">Yes</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('No click')">No</button>
+  </div>
+</ng-template>
+
+<div class="btn-group" role="group" aria-label="Topic buttons">
+  <button   class="btn btn-outline-success" type="button" (click)="open_new(content)" placement="top" ngbTooltip="Create a new Topic."><i-plus-circle></i-plus-circle>New Topic</button>
+  <button  *ngIf="!display_only_new" class="btn btn-outline-primary" type="button" (click)="open(edit,index)" placement="top" ngbTooltip="Edit this Topic."><i-edit></i-edit>Edit Topic</button>
+  <button  *ngIf="!display_only_new" class="btn btn-outline-danger" type="button" (click)="open_delete(delete,index)" placement="top" ngbTooltip="Delete this Topic."><i-delete></i-delete>Delete Topic</button>
+</div>

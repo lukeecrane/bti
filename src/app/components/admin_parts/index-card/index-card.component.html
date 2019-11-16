@@ -1,0 +1,32 @@
+<div class="card" >
+  <div class="card-header"><h5 class="card-title">{{index.main_heading}}</h5></div>
+  <div class="card-body">
+    <app-redirect-modal-index [index]="index" [indices]="display_indices" (result)="indexChanged($event)"></app-redirect-modal-index>
+    <br/>
+    <div style="padding-top:10px;padding-bottom:10px;">
+      <app-scripture-modal-index [index]="index" [display_only_new]="true" ></app-scripture-modal-index>
+    </div>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Versus</th>
+          <th>Description</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let scripture of index.scriptures">
+          <td><strong style="color:rgb(0,0,0);">{{scripture.verse}}</strong></td>
+          <td>
+            <p class="text-info" [innerHTML]="scripture.KJV_text"></p>
+          </td>
+          <td>
+            <app-scripture-modal-index [index]="index" [scripture]="scripture"></app-scripture-modal-index>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

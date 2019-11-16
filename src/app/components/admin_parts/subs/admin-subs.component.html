@@ -1,0 +1,98 @@
+<ng-template #new let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Create a new Sub Topic</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <label for="title">Sub Topic Name</label>
+        <p>
+          <ngb-alert [dismissible]="true" *ngIf="errorMessage!=''">
+            <strong>Error!</strong> {{errorMessage}}
+          </ngb-alert>
+        </p>
+        <div class="input-group">
+          <input id="title_edit" class="form-control" [(ngModel)]="currently_editing_sub.sub_heading" #ctrl="ngModel" required name="title" />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="save_sub(index,currently_editing_sub)">Save</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancel</button>
+  </div>
+</ng-template>
+
+<ng-template #edit let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-edit">Edit Sub Topic</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form>
+      <div class="form-group">
+        <label for="title">Sub Topic Name</label>
+        <div class="input-group">
+          <input id="title" class="form-control" [(ngModel)]="currently_editing_sub.sub_heading" #ctrl="ngModel" required name="title" />
+        </div>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="update_sub(index,currently_editing_sub)">Update</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancel</button>
+  </div>
+</ng-template>
+
+<ng-template #delete let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-delete-title">Delete Sub Topic</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <h5>Do you wish to delete this sub topic: {{current_sub.sub_heading}}?  This is a permanent.</h5>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="delete_sub(index,currently_editing_sub)">Yes</button>
+    <button type="button" class="btn btn-outline-dark" (click)="modal.close('No click')">No</button>
+  </div>
+</ng-template>
+
+
+
+<span *ngIf="index.subs!=undefined">
+  <div ngbDropdown class="d-inline-block">
+  <button class="btn btn-outline-primary "   ngbDropdownToggle  >Sub Topics</button>
+  <div ngbDropdownMenu aria-labelledby="dropdownBasic1" *ngFor="let sub of index.subs">
+                    <span *ngFor="let sub of index.subs">
+                      <button class="dropdown-item" (click)="goto_sub(sub);">{{sub.sub_heading}}</button>
+                    </span>
+  </div>
+</div>
+</span>
+<span *ngIf="index.subs==undefined">
+
+  <button class="btn btn-outline-primary" disabled>No Sub Topics</button>
+
+</span>
+&nbsp;
+<span *ngIf="index.displayed_sub!=undefined">
+  <div class="btn-group" role="group" aria-label="Basic example">
+    <button   class="btn btn-outline-success" type="button" style="height:38px" (click)="open_new(new)" placement="top" ngbTooltip="Create a new Sub Topic."><i-plus-circle></i-plus-circle></button>
+    <button   class="btn btn-outline-primary" type="button" style="height:38px" (click)="open_edit(edit,current_sub)" placement="top" ngbTooltip="Edit a Sub Topic."><i-edit></i-edit>&nbsp;{{index.displayed_sub.sub_heading}}</button>
+    <button   class="btn btn-outline-danger" type="button" style="height:38px" (click)="open_delete(delete,current_sub)" placement="top" ngbTooltip="Delete a Sub Topic."><i-delete></i-delete>&nbsp;{{index.displayed_sub.sub_heading}}</button>
+  </div>
+</span>
+<span *ngIf="index.displayed_sub==undefined">
+<button   class="btn btn-outline-success" type="button" style="height:38px" (click)="open_new(new)" placement="top" ngbTooltip="Create a new Sub Topic."><i-plus-circle></i-plus-circle></button>
+
+</span>
+  <app-sub-card [index]="index" [indicies]="indicies"  (result)="subChanged($event)" [sub]="current_sub" [subIndex]="current_sub_Index"></app-sub-card>
+

@@ -1,0 +1,52 @@
+<span *ngIf="subIndex>-1">
+<div class="table-responsive">
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Versus</th>
+      <th>Description</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let scripture of sub.scriptures">
+      <td><strong style="color:rgb(0,0,0);">{{scripture.verse}}</strong></td>
+      <td>
+        <p class="text-info" [innerHTML]="scripture.KJV_text"></p>
+      </td>
+      <td>
+        <app-scripture-modal-sub [index]="index" [scripture]="scripture" [sub]="sub" [subIndex]="subIndex"></app-scripture-modal-sub>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+</span>
+<span *ngIf="subIndex==-1">
+  <div class="table-responsive" *ngIf="index.scriptures.length > 0">
+                      <table class="table">
+                        <thead>
+                        <tr>
+                          <th>Verses</th>
+                          <th>Description</th>
+                          <th>Examine</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let scripture of index.scriptures">
+                          <td><strong style="color:rgb(0,0,0);">{{scripture.verse}}</strong>
+                          <td>
+                            <span *ngIf="scripture.KJV_text!='Redirect'"><p class="text-secondary" [innerHTML]="scripture.KJV_text"></p></span>
+                            <span *ngIf="scripture.KJV_text=='Redirect'">
+                        <p class="text-secondary text-muted" [innerHTML]="scripture.redirect_title"></p>
+                              <!-- <button class="btn btn-primary" (click)="jumpto(scripture.redirect_title,errormodal);">{{scripture.redirect_title}}</button> -->
+                </span>
+
+                          </td>
+                          <td> <app-scripture-modal-index [index]="index" [scripture]="scripture" ></app-scripture-modal-index></td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </div>
+</span>
